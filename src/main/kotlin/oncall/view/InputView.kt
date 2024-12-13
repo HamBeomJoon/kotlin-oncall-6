@@ -21,4 +21,23 @@ object InputView {
         }
     }
 
+    fun getWorkers(): Pair<List<String>, List<String>> {
+        while (true) {
+            try {
+                print(Constants.INPUT_WEEKDAY_WORKERS)
+                val weekdayInput = Console.readLine()
+                val weekdayWorkers = weekdayInput.split(",")
+                Validator.validateWorkers(weekdayWorkers)
+
+                print(Constants.INPUT_HOLIDAY_WORKERS)
+                val holidayInput = Console.readLine()
+                val holidayWorkers = holidayInput.split(",")
+                Validator.validateWorkers(holidayWorkers)
+
+                return Pair(weekdayWorkers, holidayWorkers)
+            } catch (e: IllegalArgumentException) {
+                println(e.message)
+            }
+        }
+    }
 }
