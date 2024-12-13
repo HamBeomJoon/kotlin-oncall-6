@@ -35,17 +35,42 @@ class SchedulerController {
         month: Int,
         startDay: String,
         publicHoliday: List<Int>,
-        weekdayWorkers: List<String>,
-        holidayWorkers: List<String>
-    ) {
+        weekdayWorkerList: ArrayDeque<String>,
+        holidayWorkerList: ArrayDeque<String>
+    ): MutableList<String> {
         val days = listOf("월", "화", "수", "목", "금", "토", "일")
         Collections.rotate(days, -days.indexOf(startDay)) // 시작요일을 0번째 인덱스로 rotate
 
         for (day in 1..dayOfMonth[month]!!) {
             if (day in publicHoliday || day % 7 == 5 || day % 7 == 6) weekendScheduling()
             else weekdayScheduling()
+    private fun weekendScheduling(
+        holidayWorkers: ArrayDeque<String>,
+        previousWorker: String,
+        holidayTemp: String?
+    ): Triple<ArrayDeque<String>, String, String?> {
+        var copyWorkers = holidayWorkers
+        var todayWorker: String
+        var tempWorker: String? = holidayTemp
+
+        if (holidayWorkers.isEmpty()) copyWorkers = workersReset(this.holidayWorker)
+
+        if (tempWorker != null) {
+            if (tempWorker == previousWorker) {
+                todayWorker = copyWorkers.removeFirst()
+            } else {
+                todayWorker = tempWorker
+                tempWorker = null
+            }
+        } else {
+            todayWorker = copyWorkers.removeFirst()
+            if (todayWorker == previousWorker) {
+                tempWorker = todayWorker
+                todayWorker = copyWorkers.removeFirst()
+            }
         }
 
+        return Triple(copyWorkers, todayWorker, tempWorker)
     }
 
     private fun weekendScheduling() {
