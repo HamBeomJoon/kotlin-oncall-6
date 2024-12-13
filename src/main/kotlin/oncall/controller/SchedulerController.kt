@@ -31,6 +31,7 @@ class SchedulerController {
 
         val result = workdayScheduling(month, startDay, publicHoliday, weekdayWorkers, holidayWorkers)
 
+        printResult(month, startDay, publicHoliday, result)
     }
 
     private fun workdayScheduling(
@@ -136,5 +137,13 @@ class SchedulerController {
 
     private fun workersReset(input: List<String>): ArrayDeque<String> = ArrayDeque(input)
 
+    private fun printResult(month: Int, startDay: String, publicHoliday: List<Int>, result: List<String>) {
+        val days = listOf("월", "화", "수", "목", "금", "토", "일")
+        Collections.rotate(days, -days.indexOf(startDay))
+
+        for (day in 1..dayOfMonth[month]!!) {
+            if (day in publicHoliday) println("${month}월 ${day}일(휴일) ${days[(day - 1) % 7]} ${result[day - 1]}")
+            else println("${month}월 ${day}일 ${days[(day - 1) % 7]} ${result[day - 1]}")
+        }
     }
 }
