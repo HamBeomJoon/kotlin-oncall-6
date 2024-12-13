@@ -1,6 +1,7 @@
 package oncall.controller
 
 import camp.nextstep.edu.missionutils.Console
+import java.util.Collections
 
 class SchedulerController {
     private val publicHolidays =
@@ -23,7 +24,20 @@ class SchedulerController {
         val holidayWorkers = Console.readLine().split(",").toList()
 
         val publicHoliday = publicHolidays.filter { it.key == month }.values.toList()
+        workdayScheduling(month, startDay, publicHoliday, weekdayWorkers, holidayWorkers)
+    }
 
+    private fun workdayScheduling(
+        month: Int,
+        startDay: String,
+        publicHoliday: List<Int>,
+        weekdayWorkers: List<String>,
+        holidayWorkers: List<String>
+    ) {
+        val days = listOf("월", "화", "수", "목", "금", "토", "일")
+        Collections.rotate(days, -days.indexOf(startDay)) // 시작요일을 0번째 인덱스로 rotate
+
+        for (day in 1..dayOfMonth[month]!!) {
             if (day in publicHoliday || day % 7 == 5 || day % 7 == 6) weekendScheduling()
             else weekdayScheduling()
         }
