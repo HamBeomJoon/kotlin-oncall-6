@@ -17,13 +17,9 @@ class SchedulerController {
     fun start() {
         val (month, startDay) = InputView.getMonthStartDay()
 
-        print("평일 비상 근무 순번대로 사원 닉네임을 입력하세요> ")
-        weekdayWorker = Console.readLine().split(",").toList()
-        val weekdayWorkers = workersReset(weekdayWorker)
-
-        print("휴일 비상 근무 순번대로 사원 닉네임을 입력하세요> ")
-        holidayWorker = Console.readLine().split(",").toList()
-        val holidayWorkers = workersReset(holidayWorker)
+        val workersInput = InputView.getWorkers()
+        val weekdayWorkers = workersReset(workersInput.first)
+        val holidayWorkers = workersReset(workersInput.second)
 
         val publicHoliday = publicHolidays.filter { it.key == month }.values.toList()
 
