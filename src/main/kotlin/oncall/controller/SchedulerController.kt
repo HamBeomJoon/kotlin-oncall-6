@@ -15,8 +15,12 @@ class SchedulerController {
         val (month, startDay) = InputView.getMonthStartDay()
 
         val workersInput = InputView.getWorkers()
-        val weekdayWorkers = workersReset(workersInput.first)
-        val holidayWorkers = workersReset(workersInput.second)
+
+        this.weekdayWorker = workersInput.first
+        val weekdayWorkers = workersReset(weekdayWorker)
+
+        this. holidayWorker = workersInput.second
+        val holidayWorkers = workersReset(holidayWorker)
 
         val publicHoliday = publicHolidays.filter { it.key == month }.values.toList()
 
