@@ -1,6 +1,7 @@
 package oncall.controller
 
 import camp.nextstep.edu.missionutils.Console
+import oncall.view.InputView
 import java.util.Collections
 
 class SchedulerController {
@@ -14,10 +15,7 @@ class SchedulerController {
     private var holidayWorker = listOf<String>()
 
     fun start() {
-        print("비상 근무를 배정할 월과 시작 요일을 입력하세요> ")
-        val input = Console.readLine().split(",")
-        val month = input[0].toInt()
-        val startDay = input[1]
+        val (month, startDay) = InputView.getMonthStartDay()
 
         print("평일 비상 근무 순번대로 사원 닉네임을 입력하세요> ")
         weekdayWorker = Console.readLine().split(",").toList()
