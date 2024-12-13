@@ -1,16 +1,13 @@
 package oncall.controller
 
-import camp.nextstep.edu.missionutils.Console
+import oncall.model.MonthDays
 import oncall.view.InputView
+import oncall.view.OutputView
 import java.util.Collections
 
 class SchedulerController {
     private val publicHolidays =
         mapOf(Pair(1, 1), Pair(3, 1), Pair(5, 5), Pair(6, 6), Pair(8, 15), Pair(10, 3), Pair(10, 9), Pair(12, 25))
-    private val dayOfMonth = mapOf(
-        Pair(1, 31), Pair(3, 31), Pair(5, 31), Pair(7, 31), Pair(8, 31), Pair(10, 31), Pair(12, 31),
-        Pair(4, 30), Pair(6, 30), Pair(9, 30), Pair(1, 30), Pair(2, 28)
-    )
     private var weekdayWorker = listOf<String>()
     private var holidayWorker = listOf<String>()
 
@@ -25,7 +22,7 @@ class SchedulerController {
 
         val result = workdayScheduling(month, startDay, publicHoliday, weekdayWorkers, holidayWorkers)
 
-        printResult(month, startDay, publicHoliday, result)
+        OutputView.printResult(month, startDay, publicHoliday, result)
     }
 
     private fun workdayScheduling(
@@ -45,7 +42,7 @@ class SchedulerController {
         var weekdayTemp: String? = null
         var holidayTemp: String? = null
         var previousWorker = ""
-        for (day in 1..dayOfMonth[month]!!) {
+        for (day in 1..MonthDays.getDaysInMonth(month)!!) {
             if (day in publicHoliday || days[(day - 1) % 7] == "토" || days[(day - 1) % 7] == "일") {
                 val (copyWorkers, todayWorker, tempWorker) = weekendScheduling(
                     holidayWorkers,
@@ -131,13 +128,4 @@ class SchedulerController {
 
     private fun workersReset(input: List<String>): ArrayDeque<String> = ArrayDeque(input)
 
-    private fun printResult(month: Int, startDay: String, publicHoliday: List<Int>, result: List<String>) {
-        val days = listOf("월", "화", "수", "목", "금", "토", "일")
-        Collections.rotate(days, -days.indexOf(startDay))
-
-        for (day in 1..dayOfMonth[month]!!) {
-            if (day in publicHoliday) println("${month}월 ${day}일(휴일) ${days[(day - 1) % 7]} ${result[day - 1]}")
-            else println("${month}월 ${day}일 ${days[(day - 1) % 7]} ${result[day - 1]}")
-        }
-    }
 }
