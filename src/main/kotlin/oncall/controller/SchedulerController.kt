@@ -10,6 +10,9 @@ class SchedulerController {
 
         print("평일 비상 근무 순번대로 사원 닉네임을 입력하세요> ")
         val weekdayList = Console.readLine().split(",").toList()
+
+        print("휴일 비상 근무 순번대로 사원 닉네임을 입력하세요> ")
+        val holidayList = Console.readLine().split(",").toList()
     }
 
 
