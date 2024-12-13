@@ -10,6 +10,8 @@ class SchedulerController {
         Pair(1, 31), Pair(3, 31), Pair(5, 31), Pair(7, 31), Pair(8, 31), Pair(10, 31), Pair(12, 31),
         Pair(4, 30), Pair(6, 30), Pair(9, 30), Pair(1, 30), Pair(2, 28)
     )
+    private var weekdayWorker = listOf<String>()
+    private var holidayWorker = listOf<String>()
 
     fun start() {
         print("비상 근무를 배정할 월과 시작 요일을 입력하세요> ")
@@ -18,10 +20,12 @@ class SchedulerController {
         val startDay = input[1]
 
         print("평일 비상 근무 순번대로 사원 닉네임을 입력하세요> ")
-        val weekdayWorkers = Console.readLine().split(",").toList()
+        weekdayWorker = Console.readLine().split(",").toList()
+        val weekdayWorkers = workersReset(weekdayWorker)
 
         print("휴일 비상 근무 순번대로 사원 닉네임을 입력하세요> ")
-        val holidayWorkers = Console.readLine().split(",").toList()
+        holidayWorker = Console.readLine().split(",").toList()
+        val holidayWorkers = workersReset(holidayWorker)
 
         val publicHoliday = publicHolidays.filter { it.key == month }.values.toList()
         workdayScheduling(month, startDay, publicHoliday, weekdayWorkers, holidayWorkers)
@@ -48,7 +52,7 @@ class SchedulerController {
 
     }
 
-    private fun weekdayScheduling() {
+    private fun workersReset(input: List<String>): ArrayDeque<String> = ArrayDeque(input)
 
     }
 }
