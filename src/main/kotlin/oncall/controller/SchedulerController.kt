@@ -73,8 +73,34 @@ class SchedulerController {
         return Triple(copyWorkers, todayWorker, tempWorker)
     }
 
-    private fun weekendScheduling() {
+    private fun weekdayScheduling(
+        weekdayWorkers: ArrayDeque<String>,
+        previousWorker: String,
+        weekdayTemp: String?
+    ): Triple<ArrayDeque<String>, String, String?> {
+        var copyWorkers = weekdayWorkers
+        var todayWorker: String
+        var tempWorker: String? = weekdayTemp
 
+        if (copyWorkers.isEmpty()) copyWorkers = workersReset(this.weekdayWorker)
+
+        if (tempWorker != null) {
+            if (tempWorker == previousWorker) {
+                todayWorker = copyWorkers.removeFirst()
+            } else {
+                todayWorker = tempWorker
+                tempWorker = null
+            }
+        } else {
+            todayWorker = copyWorkers.removeFirst()
+            if (copyWorkers.isEmpty()) workersReset(this.weekdayWorker)
+            if (todayWorker == previousWorker) {
+                tempWorker = todayWorker
+                todayWorker = copyWorkers.removeFirst()
+            }
+        }
+
+        return Triple(copyWorkers, todayWorker, tempWorker)
     }
 
     private fun workersReset(input: List<String>): ArrayDeque<String> = ArrayDeque(input)
