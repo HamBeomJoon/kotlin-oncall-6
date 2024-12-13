@@ -1,5 +1,8 @@
 package oncall
 
+import oncall.controller.SchedulerController
+
 fun main() {
-    TODO("프로그램 구현")
+    val controller = SchedulerController()
+    controller.start()
 }
