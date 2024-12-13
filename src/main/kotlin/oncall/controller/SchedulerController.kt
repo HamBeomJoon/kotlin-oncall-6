@@ -28,7 +28,9 @@ class SchedulerController {
         val holidayWorkers = workersReset(holidayWorker)
 
         val publicHoliday = publicHolidays.filter { it.key == month }.values.toList()
-        workdayScheduling(month, startDay, publicHoliday, weekdayWorkers, holidayWorkers)
+
+        val result = workdayScheduling(month, startDay, publicHoliday, weekdayWorkers, holidayWorkers)
+
     }
 
     private fun workdayScheduling(
@@ -41,9 +43,38 @@ class SchedulerController {
         val days = listOf("월", "화", "수", "목", "금", "토", "일")
         Collections.rotate(days, -days.indexOf(startDay)) // 시작요일을 0번째 인덱스로 rotate
 
+        val workers = mutableListOf<String>()
+        var weekdayWorkers = weekdayWorkerList
+        var holidayWorkers = holidayWorkerList
+
+        var weekdayTemp: String? = null
+        var holidayTemp: String? = null
+        var previousWorker = ""
         for (day in 1..dayOfMonth[month]!!) {
-            if (day in publicHoliday || day % 7 == 5 || day % 7 == 6) weekendScheduling()
-            else weekdayScheduling()
+            if (day in publicHoliday || days[(day - 1) % 7] == "토" || days[(day - 1) % 7] == "일") {
+                val (copyWorkers, todayWorker, tempWorker) = weekendScheduling(
+                    holidayWorkers,
+                    previousWorker,
+                    holidayTemp
+                )
+                holidayWorkers = copyWorkers
+                previousWorker = todayWorker
+                holidayTemp = tempWorker
+            } else {
+                val (copyWorkers, todayWorker, tempWorker) = weekdayScheduling(
+                    weekdayWorkers,
+                    previousWorker,
+                    weekdayTemp
+                )
+                weekdayWorkers = copyWorkers
+                previousWorker = todayWorker
+                weekdayTemp = tempWorker
+            }
+            workers.add(previousWorker)
+        }
+        return workers
+    }
+
     private fun weekendScheduling(
         holidayWorkers: ArrayDeque<String>,
         previousWorker: String,
